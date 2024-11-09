@@ -54,12 +54,7 @@ except Exception as e:
 # Example dataset URL
 dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip'
 
-# (Skip dataset loading step if using a cloud service, adapt accordingly)
 
-# Create mappings and function to load the model as above
-# Other code remains the same as before
-
-# Function for image processing, etc.
 
 def preprocess_image(img):
     img = img.convert("L")
@@ -143,6 +138,10 @@ st.markdown(
 
 # Call the function to display the floating tab
 floating_tab_with_hover()
+def is_image_blank(image_data):
+    # Convert the image to grayscale and check if all pixels are black
+    grayscale_image = np.mean(image_data[:, :, :3], axis=-1)  # Convert to grayscale by averaging the RGB channels
+    return np.all(grayscale_image == 0) 
 
 # Instructions modal
 def show_instructions():

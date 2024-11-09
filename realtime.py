@@ -69,7 +69,7 @@ except Exception as e:
     st.error("An error occurred while loading the model.")
     st.text(f"Error details: {e}")
 
-
+datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
 
 train_generator = datagen.flow_from_directory(
     dataset_path,

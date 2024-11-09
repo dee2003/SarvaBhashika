@@ -34,7 +34,7 @@ model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/release
 dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip'
 model_path = 'tulu_character_recognition_model2.h5'
 dataset_path = 'dataset.zip'
-extracted_dataset_dir = 'dataset'  # Directory to extract dataset contents
+dataset_dir = 'dataset'  # Directory to extract dataset contents
 
 # Function to download a file
 def download_file(url, path):

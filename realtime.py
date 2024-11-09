@@ -30,7 +30,7 @@ from io import BytesIO
 from keras.models import load_model
 
 # Get the model from the URL
-model_url = "https://path_to_your_model.h5"
+model_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/tulu_character_recognition_model2.h5"
 response = requests.get(model_url)
 
 if response.status_code == 200:
@@ -43,7 +43,7 @@ else:
 
 # Ensure your dataset is accessible (you may want to upload your dataset to a cloud service like AWS S3 or Google Cloud Storage if large)
 # Example dataset URL
-dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip'
+dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip'
 
 # (Skip dataset loading step if using a cloud service, adapt accordingly)
 

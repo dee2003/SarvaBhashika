@@ -1,0 +1,1 @@
+# Varnamitra-Tulu-word-translation

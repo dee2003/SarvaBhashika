@@ -81,28 +81,6 @@ train_generator = datagen.flow_from_directory(
     shuffle=True,
     seed=42,
 )
-
-
-
-model_path = 'tulu_character_recognition_model2.h5'
-model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/tulu_character_recognition_model2.h5'
-
-# Check if model exists, otherwise download
-if not os.path.exists(model_path):
-    st.info("Downloading model, please wait...")
-    response = requests.get(model_url)
-    with open(model_path, 'wb') as f:
-        f.write(response.content)
-    st.success("Model downloaded successfully!")
-
-# Load model with error handling
-try:
-    model = load_model(model_path)
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-except Exception as e:
-    st.error("An error occurred while loading the model.")
-    st.text(f"Error details: {e}")
-
     
 class_indices = train_generator.class_indices
 index_to_class = {v: k for k, v in class_indices.items()}

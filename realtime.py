@@ -41,7 +41,7 @@ def download_file(url, path):
             f.write(chunk)
 
 # Download and load model
-if not os.path.exists(model_path):
+if not os.path.exists(model_url):
     st.info("Downloading model, please wait...")
     download_file(model_url, model_path)
     st.success("Model downloaded successfully!")

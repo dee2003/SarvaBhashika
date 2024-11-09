@@ -49,6 +49,7 @@ except Exception as e:
     st.error("An error occurred while loading the model.")
     st.text(f"Error details: {e}")
 # Load model and generator setup
+dataset_path ='https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/v1.0/dataset.zip' # Adjust this to the correct folder name
 datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
 train_generator = datagen.flow_from_directory(
     dataset_path,

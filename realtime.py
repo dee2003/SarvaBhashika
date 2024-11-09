@@ -15,7 +15,7 @@ batch_size = 32
 confidence_threshold = 0.6
 
 # Load Excel file with additional columns for meanings (from GitHub or other cloud storage)
-excel_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/words_translations.xlsx'
+excel_url = 'words_translations.xlsx'
 df = pd.read_excel(excel_url)
 
 # Create mappings for meanings in English, Kannada, Malayalam, and Hindi

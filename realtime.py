@@ -11,9 +11,6 @@ from io import BytesIO
 import requests
 import os
 import zipfile
-import streamlit as st
-
-
 
 # Define image dimensions
 img_height, img_width = 150, 150
@@ -25,10 +22,10 @@ excel_file = 'words_translations.xlsx'
 df = pd.read_excel(excel_file)
 
 # Create mappings for meanings in English, Kannada, Malayalam, and Hindi
-kannada_to_english = dict(zip(df['Tulu_word'], df['English_Meaning']))
-kannada_to_kannada = dict(zip(df['Tulu_word'], df['Kannada_Meaning']))
-kannada_to_malayalam = dict(zip(df['Tulu_word'], df['Malayalam_Meaning']))
-kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
+tulu_to_english = dict(zip(df['Tulu_word'], df['English_Meaning']))
+tulu_to_kannada = dict(zip(df['Tulu_word'], df['Kannada_Meaning']))
+tulu_to_malayalam = dict(zip(df['Tulu_word'], df['Malayalam_Meaning']))
+tulu_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
 
 model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/tulu_character_recognition_model2.h5'
 dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip'
@@ -44,7 +41,7 @@ def download_file(url, path):
             f.write(chunk)
 
 # Download and load model
-if not os.path.exists(model_url):
+if not os.path.exists(model_path):
     st.info("Downloading model, please wait...")
     download_file(model_url, model_path)
     st.success("Model downloaded successfully!")
@@ -178,33 +175,27 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-
 # Call the function to display the floating tab
 floating_tab_with_hover()
 
 # Instructions modal
 def show_instructions():
-    st.markdown("""
-    <div style='background-color: #d1ecf1; padding: 20px; border-radius: 8px; font-family: Georgia;'>
-        <h2 style='color: #0c5460; font-size: 1.3em;'>How to Use the Drawing Tool</h2>
-        <p style='color: #0c5460; font-size: 1.1em;'>1. Select how many characters of a word to draw.</p>
-        <p style='color: #0c5460; font-size: 1.1em;'>2. Drawing one character shows its Kannada equivalent.</p>
-        <p style='color: #0c5460; font-size: 1.1em;'>3. Drawing two or three characters displays their Kannada equivalents and the translation of the word in multiple languages.</p>
-        <p style='color: #0c5460; font-size: 1.1em;'><strong style='color: #004085;'>Enjoy translating your Tulu words!</p>
-    </div>
-    """, unsafe_allow_html=True)
-
-
+    st.markdown(""" 
+    <div style='background-color: #d1ecf1; padding: 20px; border-radius: 8px; font-family: Georgia;'> 
+        <h2 style='color: #0c5460; font-size: 1.3em;'>How to Use the Drawing Tool</h2> 
+        <p style='color: #0c5460; font-size: 1.1em;'>1. Select how many characters of a word to draw.</p> 
+        <p style='color: #0c5460; font-size: 1.1em;'>2. Drawing one character shows its Kannada equivalent.</p> 
+        <p style='color: #0c5460; font-size: 1.1em;'>3. Drawing two or three characters displays their Kannada equivalents and the translation of the word in multiple languages.</p> 
+        <p style='color: #0c5460; font-size: 1.1em;'><strong style='color: #004085;'>Enjoy translating your Tulu words!</p> 
+    </div> """, unsafe_allow_html=True)
 
 
 st.markdown(
     """
-    <div style='background-color: #004085; padding: 15px; border-radius: 8px; margin-bottom: 20px;'>
-        <h1 style='text-align: center; color: #ffffff; font-size: 2.5em;'>VarnaMithra: Multilingual Translation for Tulu</h1>
-        <p style='text-align: center; color: #e0e0e0; font-size: 1.2em;font-family: "Georgia", serif; font-style: italic;'>"Bringing Tulu to Life: Translate, Speak, and Discover a World of Languages!"</p>
-    </div>
-    """, unsafe_allow_html=True
-)
+    <div style='background-color: #004085; padding: 15px; border-radius: 8px; margin-bottom: 20px;'> 
+        <h1 style='text-align: center; color: #ffffff; font-size: 2.5em;'>VarnaMithra: Multilingual Translation for Tulu</h1> 
+        <p style='text-align: center; color: #e0e0e0; font-size: 1.2em;font-family: "Georgia", serif; font-style: italic;'> "Bringing Tulu to Life: Translate, Speak, and Discover a World of Languages!"</p>
+    </div> """, unsafe_allow_html=True)
 
 
 # Show buttons for instructions and fun fact
@@ -212,86 +203,53 @@ if st.button("🛈 Instructions"):
     show_instructions()
 
 
-
 # Select number of characters
 character_count = st.selectbox("Select the number of characters to draw:", options=[1, 2, 3], index=0)
 predictions = []
 
-for i in range(character_count):
-    st.write(f"Draw Character {i + 1}:")
-    canvas_result = st_canvas(
-        fill_color="#000000",
-        stroke_width=5,
-        stroke_color="#FFFFFF",
-        background_color="#000000",
-        width=150,
-        height=150,
-        drawing_mode="freedraw",
-        key=f"canvas_{i}",
-    )
+# Canvas for drawing
+canvas_result = st_canvas(
+    fill_color="white",
+    stroke_width=15,
+    stroke_color="black",
+    background_color="white",
+    height=150,
+    width=150,
+    drawing_mode="freedraw",
+    key="canvas"
+)
 
-    if canvas_result.image_data is not None:
-        if not is_image_blank(canvas_result.image_data):
-            drawn_image = Image.fromarray((canvas_result.image_data[:, :, :3]).astype("uint8"), "RGB")
-            preprocessed_image = preprocess_image(drawn_image)
-            predictions_array = model.predict(preprocessed_image)
-            predicted_class = np.argmax(predictions_array)
-            confidence = predictions_array[0][predicted_class]
-            if confidence >= confidence_threshold:
-                predicted_character = index_to_class.get(predicted_class, "Unknown")
-                predictions.append(predicted_character)
-            else:
-                predictions.append("Unrecognized")
-
-if predictions:
-    combined_characters = ''.join(predictions)
-
-    # Display predicted character(s) if only one character is selected, without translations
-    if character_count == 1:
-        st.markdown(f"<p style='font-size:25px; color:Blue; font-weight:bold;'>Predicted Character: {combined_characters}</p>", unsafe_allow_html=True)
+# Process the drawn image
+if canvas_result.image_data is not None:
+    img = Image.fromarray(canvas_result.image_data.astype(np.uint8))
     
-    # If more than one character, display translations as well
-    else:
-        english_meaning = kannada_to_english.get(combined_characters, "Meaning not found")
-        kannada_meaning = kannada_to_kannada.get(combined_characters, "Meaning not found")
-        malayalam_meaning = kannada_to_malayalam.get(combined_characters, "Meaning not found")
-        hindi_meaning = kannada_to_hindi.get(combined_characters, "Meaning not found")
+    # Check for blank image (i.e., no drawing)
+    if not is_image_blank(canvas_result.image_data):
+        st.image(img, caption="Your Drawing", use_column_width=True)
+        img_array = preprocess_image(img)
+        
+        # Make prediction
+        prediction = model.predict(img_array)
+        predicted_class_idx = np.argmax(prediction)
+        predicted_class = index_to_class[predicted_class_idx]
+        
+        # Prediction output
+        st.markdown(f"Prediction: **{predicted_class}**")
+        
+        # Display translations
+        if predicted_class in tulu_to_english:
+            st.write(f"English: {tulu_to_english[predicted_class]}")
+        if predicted_class in tulu_to_kannada:
+            st.write(f"Kannada: {tulu_to_kannada[predicted_class]}")
+        if predicted_class in tulu_to_malayalam:
+            st.write(f"Malayalam: {tulu_to_malayalam[predicted_class]}")
+        if predicted_class in tulu_to_hindi:
+            st.write(f"Hindi: {tulu_to_hindi[predicted_class]}")
 
-        # Display predicted characters
-        st.markdown(f"<p style='font-size:25px; color:Blue; font-weight:bold;'>Predicted Kannada Characters: {combined_characters}</p>", unsafe_allow_html=True)
-
-        st.markdown(
-        f"""
-        <div style='background-color: #d1e7dd; padding: 10px; border-radius: 5px; margin: 10px 0;'>
-            <p style='font-size:20px; color:#0f5132; font-weight:bold;'>English Meaning: {english_meaning}</p>
-        </div>
-        """, unsafe_allow_html=True)
-        if st.button("🔊 Read Aloud in English", key="en_read_aloud"):
-            speak(english_meaning, lang='en')
-
-        st.markdown(
-            f"""
-            <div style='background-color: #fff3cd; padding: 10px; border-radius: 5px; margin: 10px 0;'>
-                <p style='font-size:20px; color:#856404; font-weight:bold;'>Kannada Meaning: {kannada_meaning}</p>
-            </div>
-            """, unsafe_allow_html=True)
-        if st.button("🔊 Read Aloud in Kannada", key="kn_read_aloud"):
-            speak(kannada_meaning, lang='kn')
-
-        st.markdown(
-            f"""
-            <div style='background-color: #f8d7da; padding: 10px; border-radius: 5px; margin: 10px 0;'>
-                <p style='font-size:20px; color:#721c24; font-weight:bold;'>Malayalam Meaning: {malayalam_meaning}</p>
-            </div>
-            """, unsafe_allow_html=True)
-        if st.button("🔊 Read Aloud in Malayalam", key="ml_read_aloud"):
-            speak(malayalam_meaning, lang='ml')
-
-        st.markdown(
-            f"""
-            <div style='background-color: #cce5ff; padding: 10px; border-radius: 5px; margin: 10px 0;'>
-                <p style='font-size:20px; color:#004085; font-weight:bold;'>Hindi Meaning: {hindi_meaning}</p>
-            </div>
-            """, unsafe_allow_html=True)
-        if st.button("🔊 Read Aloud in Hindi", key="hi_read_aloud"):
-            speak(hindi_meaning, lang='hi')
+        # Speaking the translated word in multiple languages
+        speak(tulu_to_english.get(predicted_class, ''), lang='en')
+        speak(tulu_to_kannada.get(predicted_class, ''), lang='kn')
+        speak(tulu_to_malayalam.get(predicted_class, ''), lang='ml')
+        speak(tulu_to_hindi.get(predicted_class, ''), lang='hi')
+else:
+    st.write("Draw something on the canvas!")

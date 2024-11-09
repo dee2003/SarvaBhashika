@@ -33,7 +33,7 @@ kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
 model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
 dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip'
 model_path = 'tulu_character_recognition_model2.h5'
-dataset_path = 'dataset.zip'
+dataset_zip_path = 'dataset.zip'
 dataset_dir = 'dataset'  # Directory to extract dataset contents
 
 # Function to download a file

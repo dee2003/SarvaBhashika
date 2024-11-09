@@ -40,17 +40,21 @@ def download_file(url, path):
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
 
-# Download and load model
-if not os.path.exists(model_url):
+# Check if model exists, otherwise download
+if not os.path.exists(model_path):
     st.info("Downloading model, please wait...")
-    download_file(model_url, model_path)
+    response = requests.get(model_url)
+    with open(model_path, 'wb') as f:
+        f.write(response.content)
     st.success("Model downloaded successfully!")
 
+# Load model with error handling
 try:
     model = load_model(model_path)
-    st.success("Model loaded successfully!")
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 except Exception as e:
-    st.error(f"An error occurred while loading the model. Details: {e}")
+    st.error("An error occurred while loading the model.")
+    st.text(f"Error details: {e}")
 
 # Download and extract dataset if not already extracted
 if not os.path.exists(dataset_dir):

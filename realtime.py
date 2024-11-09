@@ -1,37 +1,74 @@
 import streamlit as st
-import os
-from tensorflow.keras.preprocessing.image import img_to_array, ImageDataGenerator
 from streamlit_drawable_canvas import st_canvas
 from PIL import Image
-import requests
-from io import BytesIO
 from tensorflow.keras.models import load_model
-import pandas as pd
+from tensorflow.keras.preprocessing.image import img_to_array, ImageDataGenerator
 import numpy as np
+import pandas as pd
 import pyttsx3
 from gtts import gTTS
+from io import BytesIO
+import requests
+import os
+import zipfile
+import streamlit as st
+
+
 
 # Define image dimensions
 img_height, img_width = 150, 150
 batch_size = 32
 confidence_threshold = 0.6
 
-# Load Excel file with additional columns for meanings (from GitHub or other cloud storage)
-excel_url = 'words_translations.xlsx'
-df = pd.read_excel(excel_url)
+# Load Excel file with additional columns for meanings
+excel_file = 'words_translations.xlsx'
+df = pd.read_excel(excel_file)
 
 # Create mappings for meanings in English, Kannada, Malayalam, and Hindi
 kannada_to_english = dict(zip(df['Tulu_word'], df['English_Meaning']))
 kannada_to_kannada = dict(zip(df['Tulu_word'], df['Kannada_Meaning']))
 kannada_to_malayalam = dict(zip(df['Tulu_word'], df['Malayalam_Meaning']))
 kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
+# URL of the dataset from the GitHub release
+dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip"
+
+# File path to save the downloaded dataset
+zip_file_path = "dataset.zip"
+
+# Download the dataset
+if not os.path.exists(zip_file_path):
+    response = requests.get(dataset_url)
+    with open(zip_file_path, "wb") as f:
+        f.write(response.content)
+    st.success("Dataset downloaded successfully!")
+
+# Unzip the dataset
+temp_dir = "temp_dataset"
+if not os.path.exists(temp_dir):
+    os.makedirs(temp_dir)
+
+with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
+    zip_ref.extractall(temp_dir)
+
+# Set the path to the unzipped dataset
+dataset_path = os.path.join(temp_dir, "resize2")  # Adjust this to the correct folder name
+
+# Load model and generator setup
+datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
+train_generator = datagen.flow_from_directory(
+    dataset_path,
+    target_size=(img_height, img_width),
+    color_mode='grayscale',
+    class_mode='categorical',
+    batch_size=batch_size,
+    subset='training',
+    shuffle=True,
+    seed=42,
+)
 
 
-
-# Get the model from the URL
 model_path = 'tulu_character_recognition_model2.h5'
-model_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/tulu_character_recognition_model2.h5"
-response = requests.get(model_url)
+model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/tulu_character_recognition_model2.h5'
 
 # Check if model exists, otherwise download
 if not os.path.exists(model_path):
@@ -48,19 +85,7 @@ try:
 except Exception as e:
     st.error("An error occurred while loading the model.")
     st.text(f"Error details: {e}")
-# Load model and generator setup
-dataset_path ='https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip' # Adjust this to the correct folder name
-datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
-train_generator = datagen.flow_from_directory(
-    dataset_path,
-    target_size=(img_height, img_width),
-    color_mode='grayscale',
-    class_mode='categorical',
-    batch_size=batch_size,
-    subset='training',
-    shuffle=True,
-    seed=42,
-)
+
     
 class_indices = train_generator.class_indices
 index_to_class = {v: k for k, v in class_indices.items()}

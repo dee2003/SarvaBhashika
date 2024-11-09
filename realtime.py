@@ -47,25 +47,35 @@ try:
 except Exception as e:
     st.error("An error occurred while loading the model.")
     st.text(f"Error details: {e}")
-# Load dataset (you can use a GitHub URL or directly load from a cloud storage link)
-# For example, you can use GitHub raw URLs for your dataset if it's hosted there.
-
-# Ensure your dataset is accessible (you may want to upload your dataset to a cloud service like AWS S3 or Google Cloud Storage if large)
-# Example dataset URL
-dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip'
-
-
+# Load model and generator setup
+datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
+train_generator = datagen.flow_from_directory(
+    dataset_path,
+    target_size=(img_height, img_width),
+    color_mode='grayscale',
+    class_mode='categorical',
+    batch_size=batch_size,
+    subset='training',
+    shuffle=True,
+    seed=42,
+)
+    
+class_indices = train_generator.class_indices
+index_to_class = {v: k for k, v in class_indices.items()}
 
 def preprocess_image(img):
     img = img.convert("L")
     img = img.resize((img_width, img_height))
-    img_array = np.array(img)
+    img_array = img_to_array(img)
     img_array = np.expand_dims(img_array, axis=0)
     img_array = np.repeat(img_array, 3, axis=-1)
     img_array /= 255.0
     return img_array
 
-# Function for text-to-speech
+def is_image_blank(image_data):
+    return np.all(image_data[:, :, 0] == 0) or np.all(image_data[:, :, 0] == 255)
+
+# Enhanced speak function with gTTS for non-English languages
 def speak(text, lang='en'):
     if lang == 'en':
         engine = pyttsx3.init()
@@ -77,7 +87,6 @@ def speak(text, lang='en'):
         tts.write_to_fp(audio_data)
         st.audio(audio_data.getvalue(), format="audio/mp3")
 
-# Rest of your code...
 # Function to add a floating tab with hover info
 def floating_tab_with_hover():
     # Custom CSS for floating tab and hover effect
@@ -138,10 +147,6 @@ st.markdown(
 
 # Call the function to display the floating tab
 floating_tab_with_hover()
-def is_image_blank(image_data):
-    # Convert the image to grayscale and check if all pixels are black
-    grayscale_image = np.mean(image_data[:, :, :3], axis=-1)  # Convert to grayscale by averaging the RGB channels
-    return np.all(grayscale_image == 0) 
 
 # Instructions modal
 def show_instructions():

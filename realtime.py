@@ -25,9 +25,18 @@ kannada_to_malayalam = dict(zip(df['Tulu_word'], df['Malayalam_Meaning']))
 kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
 
 # Load model from GitHub release (or any cloud storage URL)
-model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
-model = load_model(BytesIO(requests.get(model_url).content))
-model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+import requests
+from io import BytesIO
+from keras.models import load_model
+
+# Get the model from the URL
+model_url = "https://path_to_your_model.h5"
+response = requests.get(model_url)
+
+if response.status_code == 200:
+    model = load_model(BytesIO(response.content))
+else:
+    print("Failed to download model, status code:", response.status_code)
 
 # Load dataset (you can use a GitHub URL or directly load from a cloud storage link)
 # For example, you can use GitHub raw URLs for your dataset if it's hosted there.

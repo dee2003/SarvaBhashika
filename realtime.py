@@ -32,26 +32,12 @@ kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
 # URL of the dataset from the GitHub release
 dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip"
 
-# File path to save the downloaded dataset
-zip_file_path = "dataset.zip"
 
-
-
-# Unzip the dataset
-temp_dir = "temp_dataset"
-if not os.path.exists(temp_dir):
-    os.makedirs(temp_dir)
-
-with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-    zip_ref.extractall(temp_dir)
-
-# Set the path to the unzipped dataset
-dataset_path = os.path.join(temp_dir, "resize2")  # Adjust this to the correct folder name
 
 # Load model and generator setup
 datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
 train_generator = datagen.flow_from_directory(
-    dataset_path,
+    dataset_url,
     target_size=(img_height, img_width),
     color_mode='grayscale',
     class_mode='categorical',

@@ -30,7 +30,7 @@ kannada_to_kannada = dict(zip(df['Tulu_word'], df['Kannada_Meaning']))
 kannada_to_malayalam = dict(zip(df['Tulu_word'], df['Malayalam_Meaning']))
 kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
 # URL of the dataset from the GitHub release
-dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip"
+dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip"
 
 
 

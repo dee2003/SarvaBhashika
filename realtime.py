@@ -1,114 +1,58 @@
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from PIL import Image
+import requests
+from io import BytesIO
 from tensorflow.keras.models import load_model
-from tensorflow.keras.preprocessing.image import img_to_array, ImageDataGenerator
-import numpy as np
 import pandas as pd
+import numpy as np
 import pyttsx3
 from gtts import gTTS
-from io import BytesIO
-import requests
-import os
-import zipfile
-import streamlit as st
-
-
 
 # Define image dimensions
 img_height, img_width = 150, 150
 batch_size = 32
 confidence_threshold = 0.6
 
-# Load Excel file with additional columns for meanings
-excel_file = 'words_translations.xlsx'
-df = pd.read_excel(excel_file)
+# Load Excel file with additional columns for meanings (from GitHub or other cloud storage)
+excel_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/words_translations.xlsx'
+df = pd.read_excel(excel_url)
 
 # Create mappings for meanings in English, Kannada, Malayalam, and Hindi
 kannada_to_english = dict(zip(df['Tulu_word'], df['English_Meaning']))
 kannada_to_kannada = dict(zip(df['Tulu_word'], df['Kannada_Meaning']))
 kannada_to_malayalam = dict(zip(df['Tulu_word'], df['Malayalam_Meaning']))
 kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
-# URL of the dataset from the GitHub release
-dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip"
 
-# File path to save the downloaded dataset
-zip_file_path = "dataset.zip"
+# Load model from GitHub release (or any cloud storage URL)
+model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
+model = load_model(BytesIO(requests.get(model_url).content))
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 
-# Download the dataset
-# Download the dataset
-if not os.path.exists(zip_file_path):
-    try:
-        response = requests.get(dataset_url)
-        response.raise_for_status()  # Raises HTTPError for bad responses
-        with open(zip_file_path, "wb") as f:
-            f.write(response.content)
-        st.success("Dataset downloaded successfully!")
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error downloading the dataset: {e}")
-        st.stop()
+# Load dataset (you can use a GitHub URL or directly load from a cloud storage link)
+# For example, you can use GitHub raw URLs for your dataset if it's hosted there.
 
-# Unzip the dataset
-temp_dir = "temp_dataset"
-if not os.path.exists(temp_dir):
-    os.makedirs(temp_dir)
+# Ensure your dataset is accessible (you may want to upload your dataset to a cloud service like AWS S3 or Google Cloud Storage if large)
+# Example dataset URL
+dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip'
 
-with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-    zip_ref.extractall(temp_dir)
+# (Skip dataset loading step if using a cloud service, adapt accordingly)
 
-# Set the path to the unzipped dataset
-dataset_path = os.path.join(temp_dir, "resize2")  # Adjust this to the correct folder name
+# Create mappings and function to load the model as above
+# Other code remains the same as before
 
-# Load model and generator setup
-datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
-train_generator = datagen.flow_from_directory(
-    dataset_path,
-    target_size=(img_height, img_width),
-    color_mode='grayscale',
-    class_mode='categorical',
-    batch_size=batch_size,
-    subset='training',
-    shuffle=True,
-    seed=42,
-)
-
-
-model_path = 'tulu_character_recognition_model2.h5'
-model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/tulu_character_recognition_model2.h5'
-
-# Check if model exists, otherwise download
-if not os.path.exists(model_path):
-    st.info("Downloading model, please wait...")
-    response = requests.get(model_url)
-    with open(model_path, 'wb') as f:
-        f.write(response.content)
-    st.success("Model downloaded successfully!")
-
-# Load model with error handling
-try:
-    model = load_model(model_path)
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-except Exception as e:
-    st.error("An error occurred while loading the model.")
-    st.text(f"Error details: {e}")
-
-    
-class_indices = train_generator.class_indices
-index_to_class = {v: k for k, v in class_indices.items()}
+# Function for image processing, etc.
 
 def preprocess_image(img):
     img = img.convert("L")
     img = img.resize((img_width, img_height))
-    img_array = img_to_array(img)
+    img_array = np.array(img)
     img_array = np.expand_dims(img_array, axis=0)
     img_array = np.repeat(img_array, 3, axis=-1)
     img_array /= 255.0
     return img_array
 
-def is_image_blank(image_data):
-    return np.all(image_data[:, :, 0] == 0) or np.all(image_data[:, :, 0] == 255)
-
-# Enhanced speak function with gTTS for non-English languages
+# Function for text-to-speech
 def speak(text, lang='en'):
     if lang == 'en':
         engine = pyttsx3.init()
@@ -120,6 +64,7 @@ def speak(text, lang='en'):
         tts.write_to_fp(audio_data)
         st.audio(audio_data.getvalue(), format="audio/mp3")
 
+# Rest of your code...
 # Function to add a floating tab with hover info
 def floating_tab_with_hover():
     # Custom CSS for floating tab and hover effect

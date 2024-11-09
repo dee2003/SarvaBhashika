@@ -34,53 +34,65 @@ model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/release
 dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip'
 model_path = 'tulu_character_recognition_model2.h5'
 dataset_path = 'dataset.zip'
-extracted_dataset_dir = 'tulu_dataset'  # Directory to extract dataset contents
+extracted_dataset_dir = 'dataset'  # Directory to extract dataset contents
 
-# Function to download a file from a URL
+# Function to download a file
 def download_file(url, path):
     response = requests.get(url, stream=True)
     with open(path, 'wb') as f:
         for chunk in response.iter_content(chunk_size=8192):
             f.write(chunk)
 
-# Download the model if not available locally
+# Download and load model
 if not os.path.exists(model_path):
     st.info("Downloading model, please wait...")
     download_file(model_url, model_path)
     st.success("Model downloaded successfully!")
 
-# Download and extract the dataset if not available locally
-if not os.path.exists(extracted_dataset_dir):
-    st.info("Downloading dataset, please wait...")
-    download_file(dataset_url, dataset_path)
-    st.success("Dataset downloaded successfully!")
-
-    # Extract the dataset
-    st.info("Extracting dataset...")
-    with zipfile.ZipFile(dataset_path, 'r') as zip_ref:
-        zip_ref.extractall(extracted_dataset_dir)
-    st.success("Dataset extracted successfully!")
-
-# Load the model with error handling
 try:
     model = load_model(model_path)
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+    st.success("Model loaded successfully!")
 except Exception as e:
-    st.error("An error occurred while loading the model.")
-    st.text(f"Error details: {e}")
+    st.error(f"An error occurred while loading the model. Details: {e}")
 
-datagen = ImageDataGenerator(rescale=1./255, validation_split=0.2)
+# Download and extract dataset if not already extracted
+if not os.path.exists(dataset_dir):
+    if not os.path.exists(dataset_zip_path):
+        st.info("Downloading dataset, please wait...")
+        download_file(dataset_url, dataset_zip_path)
+        st.success("Dataset downloaded successfully!")
 
-train_generator = datagen.flow_from_directory(
-    dataset_path,
-    target_size=(img_height, img_width),
-    color_mode='grayscale',
-    class_mode='categorical',
-    batch_size=batch_size,
-    subset='training',
-    shuffle=True,
-    seed=42,
-)
+    if zipfile.is_zipfile(dataset_zip_path):
+        st.info("Extracting dataset...")
+        with zipfile.ZipFile(dataset_zip_path, 'r') as zip_ref:
+            zip_ref.extractall(dataset_dir)
+        st.success("Dataset extracted successfully!")
+    else:
+        st.error("The dataset file is corrupted or not a valid zip file.")
+
+# Verify dataset structure
+if os.path.exists(dataset_dir) and len(os.listdir(dataset_dir)) > 0:
+    # Ensure there are subdirectories in dataset_dir for each class
+    subdirs = [d for d in os.listdir(dataset_dir) if os.path.isdir(os.path.join(dataset_dir, d))]
+    if subdirs:
+        st.success("Dataset structure verified.")
+
+        # Set up ImageDataGenerator
+        datagen = ImageDataGenerator(rescale=1./255)
+        try:
+            train_generator = datagen.flow_from_directory(
+                dataset_dir,
+                target_size=(150, 150),  # Adjust target size as per model input
+                batch_size=32,
+                class_mode='categorical'
+            )
+            st.success("Data generator created successfully.")
+        except Exception as e:
+            st.error(f"Error creating data generator: {e}")
+    else:
+        st.error("The dataset directory does not contain class subdirectories.")
+else:
+    st.error("Dataset directory is empty or does not exist.")
     
 class_indices = train_generator.class_indices
 index_to_class = {v: k for k, v in class_indices.items()}

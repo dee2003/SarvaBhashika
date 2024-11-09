@@ -28,6 +28,7 @@ kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
 
 
 # Get the model from the URL
+model_path = 'tulu_character_recognition_model2.h5'
 model_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/tulu_character_recognition_model2.h5"
 response = requests.get(model_url)
 

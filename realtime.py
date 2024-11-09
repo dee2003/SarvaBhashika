@@ -35,12 +35,7 @@ dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/relea
 # File path to save the downloaded dataset
 zip_file_path = "dataset.zip"
 
-# Download the dataset
-if not os.path.exists(zip_file_path):
-    response = requests.get(dataset_url)
-    with open(zip_file_path, "wb") as f:
-        f.write(response.content)
-    st.success("Dataset downloaded successfully!")
+
 
 # Unzip the dataset
 temp_dir = "temp_dataset"

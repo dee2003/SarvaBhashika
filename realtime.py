@@ -30,7 +30,7 @@ kannada_to_kannada = dict(zip(df['Tulu_word'], df['Kannada_Meaning']))
 kannada_to_malayalam = dict(zip(df['Tulu_word'], df['Malayalam_Meaning']))
 kannada_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
 # URL of the dataset from the GitHub release
-dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v2.0/dataset.zip"
+dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/dataset.zip"
 
 # File path to save the downloaded dataset
 zip_file_path = "dataset.zip"
@@ -74,7 +74,7 @@ train_generator = datagen.flow_from_directory(
 
 
 model_path = 'tulu_character_recognition_model2.h5'
-model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
+model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/tag/v1.0/tulu_character_recognition_model2.h5'
 
 # Check if model exists, otherwise download
 if not os.path.exists(model_path):

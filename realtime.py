@@ -69,12 +69,12 @@ train_generator = datagen.flow_from_directory(
 
 model_path = 'tulu_character_recognition_model2.h5'
 model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
-model = load_model(model_path)
+model = load_model(model_url)
 
 
 try:
     # Check if the model file exists before trying to load
-    if not os.path.exists(model_path):
+    if not os.path.exists(model_url):
         raise FileNotFoundError(f"Model file does not exist at path: {model_path}")
     
     model = load_model(model_path)

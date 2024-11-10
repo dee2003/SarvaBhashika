@@ -78,13 +78,13 @@ if not os.path.exists(model_path):
         f.write(response.content)
     st.success("Model downloaded successfully!")
 
-# Load model with error handling
 try:
-    model = load_model(model_path)
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-except Exception as e:
-    st.error("An error occurred while loading the model.")
-    st.text(f"Error details: {e}")
+    response = requests.get(model_url)
+    response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
+    with open(model_path, 'wb') as f:
+        f.write(response.content)
+except requests.exceptions.RequestException as e:
+    st.error(f"Error downloading the model: {e}")
 
     
 class_indices = train_generator.class_indices

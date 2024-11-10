@@ -79,12 +79,11 @@ if not os.path.exists(model_path):
     st.success("Model downloaded successfully!")
 
 try:
+    model = load_model(model_path)
     response = requests.get(model_url)
     response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
     with open(model_path, 'wb') as f:
         f.write(response.content)
-    model = load_model(model_path)
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 except requests.exceptions.RequestException as e:
     st.error(f"Error downloading the model: {e}")
 

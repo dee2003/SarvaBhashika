@@ -70,28 +70,22 @@ train_generator = datagen.flow_from_directory(
 model_path = 'tulu_character_recognition_model2.h5'
 model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
 
-if not os.path.exists(model_path):
-    try:
-        # Download the model if not already present
-        response = requests.get(model_url)
-        response.raise_for_status()  # Raises an HTTPError if the HTTP request returned an unsuccessful status code
-        with open(model_path, 'wb') as f:
-            f.write(response.content)
-        st.success("Model downloaded successfully.")
-    except requests.exceptions.RequestException as e:
-        st.error(f"Error downloading the model: {e}")
-else:
-    st.success("Model already exists locally.")
 
-# Now load the model after confirming it's downloaded or already present
+
 try:
+    # Check if the model file exists before trying to load
+    if not os.path.exists(model_path):
+        raise FileNotFoundError(f"Model file does not exist at path: {model_path}")
+    
     model = load_model(model_path)
     st.success("Model loaded successfully.")
-    print("Model loaded successfully.")  # This will help in debugging
+    print("Model loaded successfully.")  # Logging to console for debugging
+except FileNotFoundError as e:
+    st.error(f"Error: {e}")
+    print(f"Error: {e}")  # Log the error to console
 except Exception as e:
     st.error(f"Error loading the model: {e}")
-    print(f"Error loading the model: {e}")  # Log the error to debug
-
+    print(f"Error loading the model: {e}")  # Log the error to conso
     
 class_indices = train_generator.class_indices
 index_to_class = {v: k for k, v in class_indices.items()}

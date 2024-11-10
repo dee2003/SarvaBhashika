@@ -16,8 +16,6 @@ import zipfile
 img_height, img_width = 150, 150
 batch_size = 32
 confidence_threshold = 0.6
-model_path = 'tulu_character_recognition_model2.h5'
-model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
 dataset_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip"
 zip_file_path = "dataset.zip"
 temp_dir = "temp_dataset"
@@ -55,32 +53,67 @@ train_generator = datagen.flow_from_directory(
     seed=42,
 )
 
-# Download model if not already present
-if not os.path.exists(model_path):
-    response = requests.get(model_url)
-    with open(model_path, "wb") as f:
-        f.write(response.content)
+# Define model URL (Replace with your actual model URL)
+model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
 
-# Load model
-try:
-    model = load_model(model_path)
-    st.success("Model loaded successfully.")
-except Exception as e:
-    st.error(f"Error loading the model: {e}")
+# Function to download the model from a URL and save it locally
+def download_model(url):
+    st.write("Downloading model...")
+    local_path = tempfile.NamedTemporaryFile(suffix=".h5", delete=False).name
+    response = requests.get(url)
+    with open(local_path, 'wb') as f:
+        f.write(response.content)
+    st.write("Model downloaded successfully.")
+    return local_path
+
+# Load the model
+@st.cache_resource
+def load_translation_model():
+    try:
+        model_path = download_model(model_url)
+        model = load_model(model_path)
+        st.write("Model loaded successfully.")
+        return model
+    except Exception as e:
+        st.error(f"Error loading model: {e}")
+        return None
+
+# Initialize model
+model = load_translation_model()
+
+# Define a function to preprocess the image
+def preprocess_image(image):
+    image = image.convert("L")  # Convert image to grayscale if needed
+    image = image.resize((64, 64))  # Resize to match model's expected input shape
+    image_array = np.array(image) / 255.0  # Normalize pixel values
+    image_array = np.expand_dims(image_array, axis=0)  # Add batch dimension
+    return image_array
+
+# Upload an image for translation
+uploaded_image = st.file_uploader("Upload a Tulu character image", type=["jpg", "png", "jpeg"])
+
+# Predict and display translation if an image is uploaded
+if uploaded_image is not None:
+    st.image(uploaded_image, caption="Uploaded Image", use_column_width=True)
+    image = Image.open(uploaded_image)
+    preprocessed_image = preprocess_image(image)
+
+    # Perform the prediction
+    if model:
+        try:
+            predictions = model.predict(preprocessed_image)
+            predicted_class = np.argmax(predictions, axis=-1)
+            st.write(f"Predicted Kannada Character: {predicted_class}")  # Modify this to show the Kannada character
+        except Exception as e:
+            st.error(f"Error making prediction: {e}")
+    else:
+        st.error("Model could not be loaded.")
 
 # Class mappings
 class_indices = train_generator.class_indices
 index_to_class = {v: k for k, v in class_indices.items()}
 
-# Function for image preprocessing
-def preprocess_image(img):
-    img = img.convert("L")
-    img = img.resize((img_width, img_height))
-    img_array = img_to_array(img)
-    img_array = np.expand_dims(img_array, axis=0)
-    img_array = np.repeat(img_array, 3, axis=-1)
-    img_array /= 255.0
-    return img_array
+
 
 # Function to check if canvas is blank
 def is_image_blank(image_data):

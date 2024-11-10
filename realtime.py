@@ -27,7 +27,7 @@ tulu_to_kannada = dict(zip(df['Tulu_word'], df['Kannada_Meaning']))
 tulu_to_malayalam = dict(zip(df['Tulu_word'], df['Malayalam_Meaning']))
 tulu_to_hindi = dict(zip(df['Tulu_word'], df['Hindi_Meaning']))
 
-model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
+model_url = 'https://github.com/dee2003/Tulu-to-Kannada-TransCoder/blob/main/tulu_character_recognition_model2.h5'
 dataset_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/dataset.zip'
 model_path = 'tulu_character_recognition_model2.h5'
 dataset_zip_path = 'dataset.zip'

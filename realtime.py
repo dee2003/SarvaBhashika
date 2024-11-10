@@ -55,7 +55,6 @@ try:
 except Exception as e:
     st.error("An error occurred while loading the model.")
     st.text(f"Error details: {e}")
-
 # Download and extract dataset if not already extracted
 if not os.path.exists(dataset_dir):
     if not os.path.exists(dataset_zip_path):

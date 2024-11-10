@@ -69,7 +69,7 @@ train_generator = datagen.flow_from_directory(
 
 model_path = 'tulu_character_recognition_model2.h5'
 model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
-
+model = load_model(model_path)
 
 
 try:

@@ -87,8 +87,10 @@ else:
 try:
     model = load_model(model_path)
     st.success("Model loaded successfully.")
+    print("Model loaded successfully.")  # This will help in debugging
 except Exception as e:
     st.error(f"Error loading the model: {e}")
+    print(f"Error loading the model: {e}")  # Log the error to debug
 
     
 class_indices = train_generator.class_indices

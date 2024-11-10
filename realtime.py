@@ -54,7 +54,7 @@ train_generator = datagen.flow_from_directory(
 )
 
 # Define model URL (Replace with your actual model URL)
-model_url = 'https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5'
+model_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5"
 def download_model(url):
     st.write("Downloading model...")
     local_path = tempfile.NamedTemporaryFile(suffix=".h5", delete=False).name

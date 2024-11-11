@@ -71,7 +71,7 @@ if not os.path.exists(model_path):
 # Load the model
 try:
     model = load_model(model_path)
-    printf("success")
+    print("success")
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 except Exception as e:
     st.error(f"Could not load model: {e}")

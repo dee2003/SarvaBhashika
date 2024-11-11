@@ -76,6 +76,9 @@ try:
 except Exception as e:
     st.error(f"Could not load model: {e}")
     st.stop()
+class_indices = train_generator.class_indices
+index_to_class = {v: k for k, v in class_indices.items()}
+
 
 # Define a function to preprocess the image
 def preprocess_image(img):

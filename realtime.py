@@ -95,15 +95,10 @@ def is_image_blank(image_data):
 
 # Enhanced speak function with gTTS for non-English languages
 def speak(text, lang='en'):
-    if lang == 'en':
-        engine = pyttsx3.init()
-        engine.say(text)
-        engine.runAndWait()
-    else:
-        tts = gTTS(text=text, lang=lang)
-        audio_data = BytesIO()
-        tts.write_to_fp(audio_data)
-        st.audio(audio_data.getvalue(), format="audio/mp3")
+    tts = gTTS(text=text, lang=lang, slow=False)
+    tts.save("temp.mp3")
+    os.system("mpg321 temp.mp3")  # This plays the generated audio (requires mpg321, can vary depending on environment)
+
 
 # Function to add a floating tab with hover info
 def floating_tab_with_hover():

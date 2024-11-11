@@ -55,17 +55,32 @@ train_generator = datagen.flow_from_directory(
 )
 
 # Define model URL (Replace with your actual model URL)
-model_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5"
-with tempfile.NamedTemporaryFile(delete=False, suffix='.h5') as tmp_file:
-    tmp_file.write(requests.get(model_url).content)
-    model_path = tmp_file.name
+import os
+import requests
 
+# Define model URL and local model path
+model_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5"
+model_path = "tulu_character_recognition_model2.h5"
+
+# Download the model if it doesn't exist locally
+if not os.path.exists(model_path):
+    try:
+        response = requests.get(model_url)
+        with open(model_path, "wb") as f:
+            f.write(response.content)
+        st.success("Model downloaded successfully!")
+    except Exception as e:
+        st.error(f"Error downloading the model: {e}")
+        st.stop()
+
+# Load the model
 try:
     model = load_model(model_path)
     model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
 except Exception as e:
     st.error(f"Could not load model: {e}")
     st.stop()
+
 
 # Define a function to preprocess the image
 def preprocess_image(image):

@@ -95,15 +95,16 @@ def is_image_blank(image_data):
     return np.all(image_data[:, :, 0] == 0) or np.all(image_data[:, :, 0] == 255)
 
 # Enhanced speak function with gTTS for non-English languages
-def speak(text, lang='en'):
-    tts = gTTS(text=text, lang=lang, slow=False)
-    
-    # Save audio to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False) as temp_audio:
-        tts.save(temp_audio.name)
-        temp_audio.close()  # Close the file to be ready for reading
-        
-        # Play audio in Streamlit
+ def speak(text, lang='en'):
+    if lang == 'en':
+        engine = pyttsx3.init()
+        engine.say(text)
+        engine.runAndWait()
+    else:
+        tts = gTTS(text=text, lang=lang)
+        audio_data = BytesIO()
+        tts.write_to_fp(audio_data)
+        st.audio(audio_data.getvalue(), format="audio/mp3")
 
 
 # Function to add a floating tab with hover info

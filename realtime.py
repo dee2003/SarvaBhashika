@@ -1,4 +1,5 @@
 import streamlit as st
+import tempfile
 from streamlit_drawable_canvas import st_canvas
 from PIL import Image
 from tensorflow.keras.models import load_model
@@ -96,8 +97,13 @@ def is_image_blank(image_data):
 # Enhanced speak function with gTTS for non-English languages
 def speak(text, lang='en'):
     tts = gTTS(text=text, lang=lang, slow=False)
-    tts.save("temp.mp3")
-    os.system("mpg321 temp.mp3")  # This plays the generated audio (requires mpg321, can vary depending on environment)
+    
+    # Save audio to a temporary file
+    with tempfile.NamedTemporaryFile(delete=False) as temp_audio:
+        tts.save(temp_audio.name)
+        temp_audio.close()  # Close the file to be ready for reading
+        
+        # Play audio in Streamlit
 
 
 # Function to add a floating tab with hover info

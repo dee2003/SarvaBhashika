@@ -205,7 +205,7 @@ if st.button("🛈 Instructions"):
 
 
 # Select number of characters
-character_count = st.selectbox("Select the number of characters to draw:", options=[1, 2, 3], index=0)
+character_count = st.selectbox("Select the number of characters to draw:", options=[1, 2, 3,4,5,6,7,8,9,10], index=0)
 predictions = []
 
 for i in range(character_count):

@@ -55,29 +55,16 @@ train_generator = datagen.flow_from_directory(
 
 # Define model URL (Replace with your actual model URL)
 model_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5"
-def download_model(url):
-    st.write("Downloading model...")
-    local_path = tempfile.NamedTemporaryFile(suffix=".h5", delete=False).name
-    response = requests.get(url)
-    with open(local_path, 'wb') as f:
-        f.write(response.content)
-    st.write("Model downloaded successfully.")
-    return local_path
+with tempfile.NamedTemporaryFile(delete=False, suffix='.h5') as tmp_file:
+    tmp_file.write(requests.get(model_url).content)
+    model_path = tmp_file.name
 
-# Load the model
-@st.cache_resource
-def load_translation_model():
-    try:
-        model_path = download_model(model_url)
-        model = load_model(model_path)
-        st.write("Model loaded successfully.")
-        return model
-    except Exception as e:
-        st.error(f"Error loading model: {e}")
-        return None
-
-# Initialize model
-model = load_translation_model()
+try:
+    model = load_model(model_path)
+    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+except Exception as e:
+    st.error(f"Could not load model: {e}")
+    st.stop()
 
 # Define a function to preprocess the image
 def preprocess_image(image):
@@ -97,15 +84,7 @@ if uploaded_image is not None:
     preprocessed_image = preprocess_image(image)
 
     # Perform the prediction
-    if model:
-        try:
-            predictions = model.predict(preprocessed_image)
-            predicted_class = np.argmax(predictions, axis=-1)
-            st.write(f"Predicted Kannada Character: {predicted_class}")  # Modify this to show the Kannada character
-        except Exception as e:
-            st.error(f"Error making prediction: {e}")
-    else:
-        st.error("Model could not be loaded.")
+  
 
 # Class mappings
 class_indices = train_generator.class_indices

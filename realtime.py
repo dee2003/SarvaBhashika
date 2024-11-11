@@ -1,4 +1,3 @@
- 
 import streamlit as st
 from streamlit_drawable_canvas import st_canvas
 from PIL import Image
@@ -54,10 +53,6 @@ train_generator = datagen.flow_from_directory(
     seed=42,
 )
 
-# Define model URL (Replace with your actual model URL)
-import os
-import requests
-
 # Define model URL and local model path
 model_url = "https://github.com/dee2003/Varnamitra-Tulu-word-translation/releases/download/v1.0/tulu_character_recognition_model2.h5"
 model_path = "tulu_character_recognition_model2.h5"
@@ -81,7 +76,6 @@ except Exception as e:
     st.error(f"Could not load model: {e}")
     st.stop()
 
-
 # Define a function to preprocess the image
 def preprocess_image(image):
     image = image.convert("L")  # Convert image to grayscale if needed
@@ -100,13 +94,13 @@ if uploaded_image is not None:
     preprocessed_image = preprocess_image(image)
 
     # Perform the prediction
-  
+    predictions_array = model.predict(preprocessed_image)
+    predicted_class = np.argmax(predictions_array)
+    confidence = predictions_array[0][predicted_class]
 
 # Class mappings
 class_indices = train_generator.class_indices
 index_to_class = {v: k for k, v in class_indices.items()}
-
-
 
 # Function to check if canvas is blank
 def is_image_blank(image_data):

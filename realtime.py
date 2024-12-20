@@ -231,8 +231,9 @@ from PIL import Image
 
 with col2:
     # Open the image
-    img_path = r"https://github.com/dee2003/dee2003-SarvaBhashika-Translating-Tulu-to-diverse-languages/blob/main/chart.jpg"
+    img_path = '/mount/src/dee2003-sarvabhashika-translating-tulu-to-diverse-languages/chart.jpg'
     img = Image.open(img_path)
+
     
     # Resize the image (set a new height, adjust width to maintain aspect ratio)
     target_height = 500  # Desired height in pixels

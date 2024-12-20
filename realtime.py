@@ -96,14 +96,21 @@ def is_image_blank(image_data):
 
 def speak(text, lang='en'):
     if lang == 'en':
-        engine = pyttsx3.init()
-        engine.say(text)
-        engine.runAndWait()
+        # Use gTTS for both English and other languages to ensure compatibility
+        tts = gTTS(text=text, lang='en')
     else:
+        # For other languages
         tts = gTTS(text=text, lang=lang)
-        audio_data = BytesIO()
-        tts.write_to_fp(audio_data)
-        st.audio(audio_data.getvalue(), format="audio/mp3")
+    
+    # Save audio to a BytesIO buffer
+    audio_data = BytesIO()
+    tts.write_to_fp(audio_data)
+    
+    # Reset the pointer to the beginning of the BytesIO buffer
+    audio_data.seek(0)
+    
+    # Play audio in Streamlit
+    st.audio(audio_data, format="audio/mp3")
 
 
 # Function to add a floating tab with hover info

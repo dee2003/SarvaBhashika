@@ -1,4 +1,4 @@
-#SarvaBhashika: Translating Tulu to diverse languages
+# SarvaBhashika: Translating Tulu to diverse languages
 **SarvaBhashika** is an interactive tool that allows users to **draw Tulu characters** and get translations in multiple languages, including **Kannada**, **English**, **Malayalam**, and **Hindi**. This project utilizes deep learning models for character recognition and Streamlit for providing a user-friendly web interface.
 
 The tool promotes the Tulu language by helping users translate handwritten Tulu characters into these languages in real-time.

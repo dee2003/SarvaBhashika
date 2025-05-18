@@ -234,17 +234,20 @@ if predictions:
 
 
 from PIL import Image
-with st.container():  # or with col2: if you're using columns
+import streamlit as st
+import requests
+from PIL import Image
+from io import BytesIO
+
+with st.container():
     try:
-        # 1. Use raw GitHub URL
         url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
         response = requests.get(url)
 
-        # 2. Check status
         if response.status_code == 200:
-            img = Image.open(BytesIO(response.content))  # ✅ Correct usage
+            img = Image.open(BytesIO(response.content))  # ✅ BytesIO here!
             st.image(img, caption="Tulu-Kannada Character Mapping Chart", use_column_width=True)
         else:
-            st.warning(f"Failed to fetch image. Status code: {response.status_code}")
+            st.warning("Failed to fetch image. Check URL.")
     except Exception as e:
-        st.error(f"Error loading image: {e}")
+        st.error(f"Image loading failed: {e}")

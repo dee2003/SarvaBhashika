@@ -241,7 +241,7 @@ with col2:
     img = Image.open(BytesIO(response.content))
 
 
-    target_height = 700  # Increase for larger display
+    target_height = 500 # Increase for larger display
     aspect_ratio = img.width / img.height
     target_width = int(target_height * aspect_ratio)
     resized_img = img.resize((target_width, target_height))

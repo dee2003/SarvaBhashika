@@ -237,6 +237,7 @@ from PIL import Image
 with col2:
     # Open the image
     img = Image.open("chart.jpg")
+    st.image(img)
     
    
     

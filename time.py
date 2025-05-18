@@ -235,15 +235,25 @@ if predictions:
 
 from PIL import Image
 with col2:
-    # Open the image
-    img_path = r"C:\Users\DELL\Python311\Scripts\chart.jpg"
-    img = Image.open(img_path)
-    
-    # Resize the image (set a new height, adjust width to maintain aspect ratio)
-    target_height = 500  # Desired height in pixels
-    aspect_ratio = img.width / img.height
-    target_width = int(target_height * aspect_ratio)
-    resized_img = img.resize((target_width, target_height))
-    
-    # Display the resized image in Streamlit
-    st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart")
+    try:
+        # Use the raw content URL for GitHub-hosted image
+        url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
+        response = requests.get(url)
+
+        # Check if the response is OK (status code 200)
+        if response.status_code == 200:
+            img = Image.open(BytesIO(response.content))
+
+            # Resize the image
+            target_height = 500
+            aspect_ratio = img.width / img.height
+            target_width = int(target_height * aspect_ratio)
+            resized_img = img.resize((target_width, target_height))
+
+            # Display the image
+            st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart")
+        else:
+            st.warning("Failed to load image. Check the image URL or GitHub permissions.")
+
+    except Exception as e:
+        st.error(f"An error occurred: {e}")

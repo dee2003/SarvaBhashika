@@ -118,8 +118,8 @@ def speak(text, lang='en'):
 
 st.markdown(
     """
-    <div style='background-color: #004085; padding: 10px 20px; border-radius: 8px; text-align: left; margin-bottom: 20px;'>
-        <h1 style='color: #ffffff; font-size: 2.5em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;'>
+    <div style='background-color: #004085; padding: 10px 20px; border-radius: 8px; text-align: center; margin-bottom: 20px; width: 100%;'>
+        <h1 style='color: #ffffff; font-size: 2.5em; margin: 0;'>
             SarvaBhashika: Translating Tulu to diverse languages
         </h1>
         <p style='color: #e0e0e0; font-size: 1.2em; font-family: "Georgia", serif; font-style: italic; margin: 0;'>
@@ -129,6 +129,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+
 # Instructions section
     st.markdown("""
 <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>

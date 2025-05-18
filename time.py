@@ -115,7 +115,6 @@ def speak(text, lang='en'):
 
 
 # Function to add a floating tab with hover info
-col1, col2 = st.columns([3,4])
 
 st.markdown(
     """
@@ -130,6 +129,19 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
+col1, col2 = st.columns([3,4])
+
+with col1:
+    url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+
+    target_height = 400
+    aspect_ratio = img.width / img.height
+    target_width = int(target_height * aspect_ratio)
+    resized_img = img.resize((target_width, target_height))
+
+    st.image(resized_img, caption="Language Translation Chart", use_column_width=True)
 with col2:
     st.markdown("""
         <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>
@@ -224,15 +236,3 @@ with col2:
 
 
 
-with col1:
-    url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
-    response = requests.get(url)
-    img = Image.open(BytesIO(response.content))
-
-
-    target_height = 500 # Increase for larger display
-    aspect_ratio = img.width / img.height
-    target_width = int(target_height * aspect_ratio)
-    resized_img = img.resize((target_width, target_height))
-
-    st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart", use_container_width=True)

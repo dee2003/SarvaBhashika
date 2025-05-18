@@ -236,6 +236,7 @@ if predictions:
 
 
 with col2:
+   with col2:
     url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
@@ -245,4 +246,5 @@ with col2:
     target_width = int(target_height * aspect_ratio)
     resized_img = img.resize((target_width, target_height))
 
-    st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart")
+    st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart", use_container_width=True)
+

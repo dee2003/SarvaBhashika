@@ -115,7 +115,7 @@ def speak(text, lang='en'):
 
 
 # Function to add a floating tab with hover info
-col1, col2 = st.columns([3, 1])
+col1, col2 = st.columns([2, 1])
 
 with col1:
     

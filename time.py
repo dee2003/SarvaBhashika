@@ -118,7 +118,7 @@ def speak(text, lang='en'):
 
 st.markdown(
     """
-    <div style='background-color: #004085; padding: 10px 20px; border-radius: 8px; text-align: center; margin-bottom: 20px;'>
+    <div style='background-color: #004085; padding: 10px 20px; border-radius: 8px; text-align: left; margin-bottom: 20px;'>
         <h1 style='color: #ffffff; font-size: 2.5em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin: 0;'>
             SarvaBhashika: Translating Tulu to diverse languages
         </h1>
@@ -141,7 +141,7 @@ with col2:
     target_width = int(target_height * aspect_ratio)
     resized_img = img.resize((target_width, target_height))
 
-    st.image(resized_img, caption="Language Translation Chart", use_column_width=True)
+    st.image(resized_img, caption="Language Translation Chart",  use_container_width=True)
 with col1:
     st.markdown("""
         <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>

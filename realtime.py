@@ -11,6 +11,7 @@ from gtts import gTTS
 from io import BytesIO
 import requests
 import os
+import requests
 import zipfile
 
 # Define image dimensions and paths
@@ -236,7 +237,10 @@ from PIL import Image
 
 with col2:
     # Open the image
-    img = Image.open("chart.jpg")
+    url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"  # NOTE: Use raw.githubusercontent.com
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+
     st.image(img)
     
    

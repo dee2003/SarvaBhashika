@@ -129,7 +129,7 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-col1, col2 = st.columns([3,4])
+col1, col2 = st.columns([2,1])
 
 
 
@@ -246,6 +246,5 @@ with col2:
     resized_img = img.resize((target_width, target_height))
 
     st.image(resized_img, caption="Language Translation Chart",  use_container_width=True)
-col1, col2 = st.columns([2, 1])
 
 

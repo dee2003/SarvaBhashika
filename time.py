@@ -121,9 +121,10 @@ with col1:
     
     st.markdown(
         """
-       <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>
-    <p style='color: #0c5460; font-size: 1.1em; margin: 2px 0;'>Draw one character to see its Kannada equivalent, or draw multiple characters of a word to get translations in Kannada and other languages.</p>
-</div>
+      <div style='background-color: #004085; padding: 5px 15px; border-radius: 8px; text-align: left; margin-bottom: 20px;'>
+            <h1 style='color: #ffffff; font-size: 3em;'>SarvaBhashika: Translating Tulu to diverse languages</h1>
+            <p style='color: #e0e0e0; font-size: 1.3em;font-family: "Georgia", serif; font-style: italic;'>"Bringing Tulu to Life: Translate, Speak, and Discover a World of Languages!"</p>
+        </div>
         """, unsafe_allow_html=True
     )
 

@@ -115,7 +115,7 @@ def speak(text, lang='en'):
 
 
 # Function to add a floating tab with hover info
-col1, col2 = st.columns([2, 1])
+col1, col2 = st.columns([3, 1])
 
 with col1:
     
@@ -233,11 +233,6 @@ if predictions:
             speak(hindi_meaning, lang="hi")
 
 
-from PIL import Image
-import streamlit as st
-import requests
-from PIL import Image
-from io import BytesIO
 
 
 with col2:

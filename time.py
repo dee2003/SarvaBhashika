@@ -241,10 +241,6 @@ with col2:
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
 
-    target_height = 1000
-    aspect_ratio = img.width / img.height
-    target_width = int(target_height * aspect_ratio)
-    resized_img = img.resize((target_width, target_height))
+   
 
-    st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart", use_container_width=True)
-
+     st.image(img, caption="Tulu-Kannada Character Mapping Chart", use_container_width=True)

@@ -236,7 +236,7 @@ from PIL import Image
 
 with col2:
     # Open the image
-    img_path = '/mount/src/dee2003-sarvabhashika-translating-tulu-to-diverse-languages/chart.jpg'
+    img_path = 'https://github.com/dee2003/SarvaBhashika/blob/main/chart.jpg'
     img = Image.open(img_path)
 
     

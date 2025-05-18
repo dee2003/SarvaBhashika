@@ -234,26 +234,17 @@ if predictions:
 
 
 from PIL import Image
-with col2:
+with st.container():  # or with col2: if you're using columns
     try:
-        # Use the raw content URL for GitHub-hosted image
+        # 1. Use raw GitHub URL
         url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
         response = requests.get(url)
 
-        # Check if the response is OK (status code 200)
+        # 2. Check status
         if response.status_code == 200:
-            img = Image.open(BytesIO(response.content))
-
-            # Resize the image
-            target_height = 500
-            aspect_ratio = img.width / img.height
-            target_width = int(target_height * aspect_ratio)
-            resized_img = img.resize((target_width, target_height))
-
-            # Display the image
-            st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart")
+            img = Image.open(BytesIO(response.content))  # ✅ Correct usage
+            st.image(img, caption="Tulu-Kannada Character Mapping Chart", use_column_width=True)
         else:
-            st.warning("Failed to load image. Check the image URL or GitHub permissions.")
-
+            st.warning(f"Failed to fetch image. Status code: {response.status_code}")
     except Exception as e:
-        st.error(f"An error occurred: {e}")
+        st.error(f"Error loading image: {e}")

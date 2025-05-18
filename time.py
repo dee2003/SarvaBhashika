@@ -239,15 +239,22 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-with st.container():
-    try:
-        url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
-        response = requests.get(url)
-
-        if response.status_code == 200:
-            img = Image.open(BytesIO(response.content))  # ✅ BytesIO here!
-            st.image(img, caption="Tulu-Kannada Character Mapping Chart", use_column_width=True)
-        else:
-            st.warning("Failed to fetch image. Check URL.")
-    except Exception as e:
-        st.error(f"Image loading failed: {e}")
+col2 = st.columns(2)
+with col2:
+    # URL of the image in your GitHub repo (use raw URL)
+    url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
+    
+    # Download the image content
+    response = requests.get(url)
+    
+    # Open image from bytes
+    img = Image.open(BytesIO(response.content))
+    
+    # Resize image
+    target_height = 500
+    aspect_ratio = img.width / img.height
+    target_width = int(target_height * aspect_ratio)
+    resized_img = img.resize((target_width, target_height))
+    
+    # Display the image in col2 with caption
+    st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart")

@@ -131,7 +131,7 @@ st.markdown(
 )
 
 # Instructions section
-    st.markdown("""
+st.markdown("""
 <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>
     <p style='color: #0c5460; font-size: 1.1em; margin: 2px 0;'>Draw one character to see its Kannada equivalent, or draw multiple characters of a word to get translations in Kannada and other languages.</p>
 </div>

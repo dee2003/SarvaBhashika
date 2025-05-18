@@ -241,6 +241,5 @@ with col2:
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
 
-   
 
-     st.image(img, caption="Tulu-Kannada Character Mapping Chart", use_container_width=True)
+    st.image(img, caption="Tulu-Kannada Character Mapping Chart", use_container_width=True)

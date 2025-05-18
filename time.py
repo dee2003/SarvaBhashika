@@ -131,7 +131,7 @@ st.markdown(
 )
 col1, col2 = st.columns([3,4])
 
-with col1:
+with col2:
     url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
     response = requests.get(url)
     img = Image.open(BytesIO(response.content))
@@ -142,7 +142,7 @@ with col1:
     resized_img = img.resize((target_width, target_height))
 
     st.image(resized_img, caption="Language Translation Chart", use_column_width=True)
-with col2:
+with col1:
     st.markdown("""
         <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>
             <p style='color: #0c5460; font-size: 1.1em; margin: 2px 0;'>Draw one character to see its Kannada equivalent, or draw multiple characters of a word to get translations in Kannada and other languages.</p>

@@ -121,7 +121,7 @@ with col1:
     
     st.markdown(
         """
-      <div style='background-color: #004085; padding: 5px 15px; border-radius: 8px; text-align: left; margin-bottom: 20px;'>
+      <div style='background-color: #004085; padding: 15px 15px; border-radius: 4px; text-align: left; margin-bottom: 10px;'>
             <h1 style='color: #ffffff; font-size: 3em;'>SarvaBhashika: Translating Tulu to diverse languages</h1>
             <p style='color: #e0e0e0; font-size: 1.3em;font-family: "Georgia", serif; font-style: italic;'>"Bringing Tulu to Life: Translate, Speak, and Discover a World of Languages!"</p>
         </div>

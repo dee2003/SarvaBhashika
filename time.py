@@ -239,16 +239,12 @@ import requests
 from PIL import Image
 from io import BytesIO
 
-col2 = st.columns(2)
+
 with col2:
     # URL of the image in your GitHub repo (use raw URL)
-    url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
+    img_path = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
+    img = Image.open(img_path)
     
-    # Download the image content
-    response = requests.get(url)
-    
-    # Open image from bytes
-    img = Image.open(BytesIO(response.content))
     
     # Resize image
     target_height = 500

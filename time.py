@@ -131,23 +131,17 @@ st.markdown(
 )
 col1, col2 = st.columns([3,4])
 
-with col2:
-    url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
-    response = requests.get(url)
-    img = Image.open(BytesIO(response.content))
 
-    target_height = 400
-    aspect_ratio = img.width / img.height
-    target_width = int(target_height * aspect_ratio)
-    resized_img = img.resize((target_width, target_height))
 
-    st.image(resized_img, caption="Language Translation Chart",  use_container_width=True)
 with col1:
+# Instructions section
     st.markdown("""
-        <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>
-            <p style='color: #0c5460; font-size: 1.1em; margin: 2px 0;'>Draw one character to see its Kannada equivalent, or draw multiple characters of a word to get translations in Kannada and other languages.</p>
-        </div>
-    """, unsafe_allow_html=True)
+<div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>
+    <p style='color: #0c5460; font-size: 1.1em; margin: 2px 0;'>Draw one character to see its Kannada equivalent, or draw multiple characters of a word to get translations in Kannada and other languages.</p>
+</div>
+""", unsafe_allow_html=True)
+
+
 
     character_count = st.selectbox("Select the number of characters to draw:", options=[1, 2, 3], index=0)
     predictions = []
@@ -180,59 +174,78 @@ with col1:
                     else:
                         predictions.append("Unrecognized")
 
-    # Display predictions and translations
-    if predictions:
-        combined_characters = ''.join(predictions)
-        st.markdown(f"<p style='font-size:25px; color:Blue; font-weight:bold;'>Predicted Kannada Characters: {combined_characters}</p>", unsafe_allow_html=True)
+# Displaying the final combined translations with speaker icon for each language.
+if predictions:
+    combined_characters = ''.join(predictions)
+    st.markdown(f"<p style='font-size:25px; color:Blue; font-weight:bold;'>Predicted Kannada Characters: {combined_characters}</p>", unsafe_allow_html=True)
+    
+    # Fetching translations
+    english_meaning = kannada_to_english.get(combined_characters, "Meaning not found")
+    kannada_meaning = kannada_to_kannada.get(combined_characters, "Meaning not found")
+    malayalam_meaning = kannada_to_malayalam.get(combined_characters, "Meaning not found")
+    hindi_meaning = kannada_to_hindi.get(combined_characters, "Meaning not found")
 
-        english_meaning = kannada_to_english.get(combined_characters, "Meaning not found")
-        kannada_meaning = kannada_to_kannada.get(combined_characters, "Meaning not found")
-        malayalam_meaning = kannada_to_malayalam.get(combined_characters, "Meaning not found")
-        hindi_meaning = kannada_to_hindi.get(combined_characters, "Meaning not found")
+    # Translation layout with 2 columns each for left and right side
+    left_col, right_col = st.columns([1, 1])
 
-        left_col, right_col = st.columns([1, 1])
+    # First two translations on the left
+    with left_col:
+        # English Translation
+        st.markdown(
+            f"""
+            <div style='padding: 10px; border-radius: 5px; margin: 10px 0; background-color: #d1e7dd;'>
+                <p style='font-size:20px; color:#0f5132; font-weight:bold;'>English Meaning: {english_meaning}</p>
+            </div>
+            """, unsafe_allow_html=True
+        )
+        if st.button("🔊 Read Aloud in English", key="en_read_aloud"):
+            speak(english_meaning, lang="en")
+        
+        # Kannada Translation
+        st.markdown(
+            f"""
+            <div style='padding: 10px; border-radius: 5px; margin: 10px 0; background-color: #fff3cd;'>
+                <p style='font-size:20px; color:#856404; font-weight:bold;'>Kannada Meaning: {kannada_meaning}</p>
+            </div>
+            """, unsafe_allow_html=True
+        )
+        if st.button("🔊 Read Aloud in Kannada", key="kn_read_aloud"):
+            speak(kannada_meaning, lang="kn")
 
-        with left_col:
-            st.markdown(
-                f"""
-                <div style='padding: 10px; border-radius: 5px; margin: 10px 0; background-color: #d1e7dd;'>
-                    <p style='font-size:20px; color:#0f5132; font-weight:bold;'>English Meaning: {english_meaning}</p>
-                </div>
-                """, unsafe_allow_html=True
-            )
-            if st.button("🔊 Read Aloud in English", key="en_read_aloud"):
-                speak(english_meaning, lang="en")
+    # Next two translations on the right
+    with right_col:
+        # Malayalam Translation
+        st.markdown(
+            f"""
+            <div style='padding: 10px; border-radius: 5px; margin: 10px 0; background-color: #f8d7da;'>
+                <p style='font-size:20px; color:#721c24; font-weight:bold;'>Malayalam Meaning: {malayalam_meaning}</p>
+            </div>
+            """, unsafe_allow_html=True
+        )
+        if st.button("🔊 Read Aloud in Malayalam", key="ml_read_aloud"):
+            speak(malayalam_meaning, lang="ml")
+        
+        # Hindi Translation
+        st.markdown(
+            f"""
+            <div style='padding: 10px; border-radius: 5px; margin: 10px 0; background-color: #cce5ff;'>
+                <p style='font-size:20px; color:#004085; font-weight:bold;'>Hindi Meaning: {hindi_meaning}</p>
+            </div>
+            """, unsafe_allow_html=True
+        )
+        if st.button("🔊 Read Aloud in Hindi", key="hi_read_aloud"):
+            speak(hindi_meaning, lang="hi")
+with col2:
+    url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
 
-            st.markdown(
-                f"""
-                <div style='padding: 10px; border-radius: 5px; margin: 10px 0; background-color: #fff3cd;'>
-                    <p style='font-size:20px; color:#856404; font-weight:bold;'>Kannada Meaning: {kannada_meaning}</p>
-                </div>
-                """, unsafe_allow_html=True
-            )
-            if st.button("🔊 Read Aloud in Kannada", key="kn_read_aloud"):
-                speak(kannada_meaning, lang="kn")
+    target_height = 400
+    aspect_ratio = img.width / img.height
+    target_width = int(target_height * aspect_ratio)
+    resized_img = img.resize((target_width, target_height))
 
-        with right_col:
-            st.markdown(
-                f"""
-                <div style='padding: 10px; border-radius: 5px; margin: 10px 0; background-color: #f8d7da;'>
-                    <p style='font-size:20px; color:#721c24; font-weight:bold;'>Malayalam Meaning: {malayalam_meaning}</p>
-                </div>
-                """, unsafe_allow_html=True
-            )
-            if st.button("🔊 Read Aloud in Malayalam", key="ml_read_aloud"):
-                speak(malayalam_meaning, lang="ml")
-
-            st.markdown(
-                f"""
-                <div style='padding: 10px; border-radius: 5px; margin: 10px 0; background-color: #cce5ff;'>
-                    <p style='font-size:20px; color:#004085; font-weight:bold;'>Hindi Meaning: {hindi_meaning}</p>
-                </div>
-                """, unsafe_allow_html=True
-            )
-            if st.button("🔊 Read Aloud in Hindi", key="hi_read_aloud"):
-                speak(hindi_meaning, lang="hi")
-
+    st.image(resized_img, caption="Language Translation Chart",  use_container_width=True)
+col1, col2 = st.columns([2, 1])
 
 

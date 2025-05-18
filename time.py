@@ -241,16 +241,13 @@ from io import BytesIO
 
 
 with col2:
-    # URL of the image in your GitHub repo (use raw URL)
-    img_path = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
-    img = Image.open(img_path)
-    
-    
-    # Resize image
+    url = "https://raw.githubusercontent.com/dee2003/SarvaBhashika/main/chart.jpg"
+    response = requests.get(url)
+    img = Image.open(BytesIO(response.content))
+
     target_height = 500
     aspect_ratio = img.width / img.height
     target_width = int(target_height * aspect_ratio)
     resized_img = img.resize((target_width, target_height))
-    
-    # Display the image in col2 with caption
+
     st.image(resized_img, caption="Tulu-Kannada Character Mapping Chart")

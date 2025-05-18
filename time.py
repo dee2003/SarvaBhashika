@@ -115,18 +115,15 @@ def speak(text, lang='en'):
 
 
 # Function to add a floating tab with hover info
-col1, col2 = st.columns([4,2])
+col1, col2 = st.columns([3,2])
 
 with col1:
     
     st.markdown(
         """
-       <div style='background-color: #004085; padding: 10px 15px; border-radius: 8px; text-align: left; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;'>
-            <h2 style='color: #ffffff; font-size: 1.8em; margin: 0;'>SarvaBhashika: Translating Tulu to diverse languages</h2>
-            <p style='color: #e0e0e0; font-size: 1.1em; font-family: "Georgia", serif; font-style: italic; margin-top: 5px;'>
-                "Bringing Tulu to Life: Translate, Speak, and Discover a World of Languages!"
-            </p>
-        </div>
+       <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>
+    <p style='color: #0c5460; font-size: 1.1em; margin: 2px 0;'>Draw one character to see its Kannada equivalent, or draw multiple characters of a word to get translations in Kannada and other languages.</p>
+</div>
         """, unsafe_allow_html=True
     )
 

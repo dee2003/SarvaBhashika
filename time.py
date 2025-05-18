@@ -129,11 +129,6 @@ st.markdown(
     """,
     unsafe_allow_html=True,
 )
-col1, col2 = st.columns([2,1])
-
-
-
-with col1:
 # Instructions section
     st.markdown("""
 <div style='background-color: #d1ecf1; padding: 8px; border-radius: 8px; font-family: Georgia; font-style: italic; margin-bottom: 10px;'>
@@ -141,6 +136,12 @@ with col1:
 </div>
 """, unsafe_allow_html=True)
 
+
+col1, col2 = st.columns([2,1])
+
+
+
+with col1:
 
 
     character_count = st.selectbox("Select the number of characters to draw:", options=[1, 2, 3], index=0)
